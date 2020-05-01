@@ -1,4 +1,4 @@
-package nl.hu.bep.countrycase.config;
+package nl.hu.bep.setup;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import javax.ws.rs.ApplicationPath;
