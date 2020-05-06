@@ -76,6 +76,8 @@ public class World implements Serializable {
 
 
 	public void addCountry(String code, String iso3, String nm, String cap, String ct, String reg, double sur, int pop, String gov, double lat, double lng) {
-		allCountries.add(new Country(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng));
+		if (getCountryByCode(code) == null) {
+			allCountries.add(new Country(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng));
+		} else throw new IllegalArgumentException("code already exists!");
 	}
 }
