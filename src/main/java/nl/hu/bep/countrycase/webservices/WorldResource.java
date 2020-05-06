@@ -4,10 +4,8 @@ import nl.hu.bep.countrycase.model.Country;
 import nl.hu.bep.countrycase.model.World;
 
 import javax.json.*;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import java.io.StringReader;
 import java.util.List;
 
 @Path("/countries")
@@ -46,6 +44,44 @@ public class WorldResource {
         JsonArray countryArray = buildJsonCountryArray(countries);
 
         return countryArray.toString();
+    }
+
+    @POST
+    @Produces("application/json")
+    public String addCountry(String jsonBody) {
+        JsonObjectBuilder response = Json.createObjectBuilder();
+
+        StringReader strReader = new StringReader(jsonBody);
+        JsonReader jsonReader = Json.createReader(strReader);
+
+        try {
+            JsonStructure jsonValue = jsonReader.read();
+
+            if (jsonValue.getValueType() == JsonValue.ValueType.OBJECT) {
+                JsonObject country = (JsonObject) jsonValue;
+
+                String code = country.getString("code");
+                String iso3 = country.getString("iso3");
+                String nm = country.getString("name");
+                String cap = country.getString("capital");
+                String ct = country.getString("continent");
+                String reg = country.getString("region");
+                double sur = Double.parseDouble(country.getString("surface"));
+                int pop = Integer.parseInt(country.getString("population"));
+                String gov = country.getString("government");
+                double lat = Double.parseDouble(country.getString("latitude"));
+                double lng = Double.parseDouble(country.getString("longitude"));
+
+                World.getWorld().addCountry(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng);
+                response.add("message", "country added!");
+            } else {
+                response.add("message", "expected a JsonObject!");
+            }
+        } catch (Exception e) {
+            response.add("message", "Error: " + e.getMessage());
+        }
+
+        return response.build().toString();
     }
 
     private JsonArray buildJsonCountryArray(List<Country> countries) {

@@ -1,11 +1,12 @@
 package nl.hu.bep.countrycase.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class World {
+public class World implements Serializable {
 	private List<Country> allCountries = new ArrayList<Country>();
 
 	private static World my_world = new World();
@@ -71,5 +72,10 @@ public class World {
 		}
 
 		return result;
+	}
+
+
+	public void addCountry(String code, String iso3, String nm, String cap, String ct, String reg, double sur, int pop, String gov, double lat, double lng) {
+		allCountries.add(new Country(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng));
 	}
 }

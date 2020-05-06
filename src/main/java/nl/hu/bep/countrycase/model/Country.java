@@ -1,6 +1,8 @@
 package nl.hu.bep.countrycase.model;
 
-public class Country {
+import java.io.Serializable;
+
+public class Country implements Serializable {
 	private String code;
 	private String iso3;
 	private String name;
