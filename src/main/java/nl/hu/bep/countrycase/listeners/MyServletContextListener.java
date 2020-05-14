@@ -1,10 +1,13 @@
 package nl.hu.bep.countrycase.listeners;
 
 import nl.hu.bep.countrycase.persistence.PersistenceManager;
+import reactor.core.scheduler.Schedulers;
+import reactor.netty.http.HttpResources;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import java.time.Duration;
 
 @WebListener
 public class MyServletContextListener implements ServletContextListener {
@@ -26,5 +29,8 @@ public class MyServletContextListener implements ServletContextListener {
         } catch (Exception e) {
             System.out.println("Error saving world: " + e.getMessage());
         }
+
+        Schedulers.shutdownNow();
+        HttpResources.disposeLoopsAndConnectionsLater(Duration.ZERO, Duration.ZERO).block();
     }
 }
