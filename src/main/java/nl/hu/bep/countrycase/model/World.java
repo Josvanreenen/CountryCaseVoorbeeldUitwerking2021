@@ -3,11 +3,10 @@ package nl.hu.bep.countrycase.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class World implements Serializable {
-	private List<Country> allCountries = new ArrayList<Country>();
+	private List<Country> allCountries = new ArrayList<>();
 
 	private static World my_world = new World();
 	public static World getWorld() {
@@ -38,25 +37,17 @@ public class World implements Serializable {
 	}
 	
 	public List<Country> getAllCountries() {
-		return allCountries;
+		return Collections.unmodifiableList(allCountries);
 	}
 	
 	public List<Country> get10LargestPopulations() {
-		Collections.sort(allCountries, new Comparator<Country>() {
-			public int compare(Country c1, Country c2) {
-				return c2.getPopulation() - c1.getPopulation();
-			};
-		});
+		Collections.sort(allCountries, (c1, c2) -> c2.getPopulation() - c1.getPopulation());
 		
 		return allCountries.subList(0, 10);
 	}
 
 	public List<Country> get10LargestSurfaces() {
-		Collections.sort(allCountries, new Comparator<Country>() {
-			public int compare(Country c1, Country c2) {
-				return (int)(c2.getSurface() - c1.getSurface());
-			};
-		});
+		Collections.sort(allCountries, (c1, c2) -> (int)(c2.getSurface() - c1.getSurface()));
 		
 		return allCountries.subList(0, 10);
 	}
@@ -74,10 +65,12 @@ public class World implements Serializable {
 		return result;
 	}
 
+	private boolean addCountry(Country countryToAdd){
+		if (!allCountries.contains(countryToAdd)) return allCountries.add(countryToAdd);
+		return false;
+	}
 
 	public void addCountry(String code, String iso3, String nm, String cap, String ct, String reg, double sur, int pop, String gov, double lat, double lng) {
-		if (getCountryByCode(code) == null) {
-			allCountries.add(new Country(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng));
-		} else throw new IllegalArgumentException("code already exists!");
+		if (!addCountry(new Country(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng))) throw new IllegalArgumentException("country already exists!");
 	}
 }

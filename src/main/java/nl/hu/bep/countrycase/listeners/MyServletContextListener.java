@@ -9,15 +9,17 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.time.Duration;
 
+import static java.lang.System.*;
+
 @WebListener
 public class MyServletContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
             PersistenceManager.loadWorldFromAzure();
-            System.out.println("World loaded from Azure...");
+            out.println("World loaded from Azure...");
         } catch (Exception e) {
-            System.out.println("Error loading world: " + e.getMessage());
+            out.println("Error loading world: " + e.getMessage());
         }
     }
 
@@ -25,9 +27,9 @@ public class MyServletContextListener implements ServletContextListener {
     public void contextDestroyed(ServletContextEvent sce) {
         try {
             PersistenceManager.saveWorldToAzure();
-            System.out.println("World saved to Azure...");
+            out.println("World saved to Azure...");
         } catch (Exception e) {
-            System.out.println("Error saving world: " + e.getMessage());
+            out.println("Error saving world: " + e.getMessage());
         }
 
         Schedulers.shutdownNow();

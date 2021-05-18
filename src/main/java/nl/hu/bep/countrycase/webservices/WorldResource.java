@@ -10,6 +10,7 @@ import java.util.List;
 
 @Path("/countries")
 public class WorldResource {
+    public static final String MESSAGE = "message";
     private World world = World.getWorld();
 
     @GET
@@ -72,13 +73,17 @@ public class WorldResource {
                 double lat = Double.parseDouble(country.getString("latitude"));
                 double lng = Double.parseDouble(country.getString("longitude"));
 
-                World.getWorld().addCountry(code, iso3, nm, cap, ct, reg, sur, pop, gov, lat, lng);
-                response.add("message", "country added!");
+                World.getWorld().addCountry(code, iso3, nm, cap, ct, reg, sur, pop,
+                        gov, lat, lng);
+                response.add(MESSAGE, "country added!");
             } else {
-                response.add("message", "expected a JsonObject!");
+                response.add(MESSAGE, "expected a JsonObject!");
             }
         } catch (Exception e) {
-            response.add("message", "Error: " + e.getMessage());
+            response.add(MESSAGE, "Error: " + e.getMessage());
+        }
+        finally {
+            jsonReader.close();
         }
 
         return response.build().toString();

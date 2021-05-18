@@ -8,15 +8,18 @@ import nl.hu.bep.countrycase.model.World;
 import java.io.*;
 
 public class PersistenceManager {
-    private final static String ENDPOINT = "https://bepcountrycase.blob.core.windows.net/";
-    private final static String SASTOKEN = "?sv=2019-10-10&ss=bfqt&srt=co&sp=rwdlacupx&se=2020-05-06T08:40:17Z&st=2020-05-06T00:40:17Z&spr=https&sig=yQ8hbIw57hwyeWiCb4jpnlWiKhAn9VFyc8FzKz9dtFE%3D";
-    private final static String CONTAINER = "worldcontainer";
+    private static final String ENDPOINT = "https://bepcountrycase.blob.core.windows.net/";
+    private static final String SASTOKEN = "?sv=2019-10-10&ss=bfqt&srt=co&sp=rwdlacupx&se=2020-05-06T08:40:17Z&st=2020-05-06T00:40:17Z&spr=https&sig=yQ8hbIw57hwyeWiCb4jpnlWiKhAn9VFyc8FzKz9dtFE%3D";
+    private static final String CONTAINER = "worldcontainer";
 
     private static BlobContainerClient blobContainer = new BlobContainerClientBuilder()
                                                             .endpoint(ENDPOINT)
                                                             .sasToken(SASTOKEN)
                                                             .containerName(CONTAINER)
                                                             .buildClient();
+
+    private PersistenceManager() {
+    }
 
     public static void loadWorldFromAzure() throws IOException, ClassNotFoundException {
         if (blobContainer.exists()) {
