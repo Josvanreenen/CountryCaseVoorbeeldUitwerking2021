@@ -12,20 +12,22 @@
 We will gladly demonstrate some of our, somewhat tedious yet formidably crafted -from an educators perspective-, code.
 The page before you was added to the countrycase when we added security to our knowlegdebase, so... without further ado, here is our login form, courtesy of <a href="https://www.w3schools.com/howto/howto_css_form_icon.asp" target="_blank">W3Schools</a>:
 
-<form>
+<form id="loginForm">
     <h2>Login Form</h2>
     <div class="input-container">
         <i class="fa fa-user icon"></i>
-        <input class="input-field" type="text" placeholder="Username" name="usrnm">
+        <input class="input-field" type="text" placeholder="Username" name="username">
     </div>
 
     <div class="input-container">
         <i class="fa fa-key icon"></i>
-        <input class="input-field" type="password" placeholder="Password" name="psw">
+        <input class="input-field" type="password" placeholder="Password" name="password">
     </div>
 
-    <button id="loginformsubmit" type="submit" class="btn">Login</button>
+    <button id="loginformsubmit" type="button" class="btn">Login</button>
 </form>
+
+<script src="js/formlogin.js"></script>
 
 <footer>
     <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
