@@ -5,7 +5,10 @@ import nl.hu.bep.countrycase.model.World;
 
 import javax.json.*;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.StringReader;
+import java.util.AbstractMap;
 import java.util.List;
 
 @Path("/countries")
@@ -15,43 +18,60 @@ public class WorldResource {
 
     @GET
     @Produces("application/json")
-    public String getCountries() {
-        JsonArray countryArray = buildJsonCountryArray(world.getAllCountries());
-        return countryArray.toString();
+    public Response getCountries() {
+        List<Country> allCountries = world.getAllCountries();
+        return !allCountries.isEmpty() ? Response.ok(allCountries).build() : Response.status(Response.Status.NO_CONTENT).entity(new AbstractMap.SimpleEntry<>(MESSAGE, "There were no countries")).build();
     }
 
     @GET
     @Path("/{code}")
     @Produces("application/json")
-    public String getCountry(@PathParam("code") String countryCode) {
-        return buildJsonCountryObject(world.getCountryByCode(countryCode)).toString();
+    public Response getCountry(@PathParam("code") String countryCode) {
+        if (countryCode.isBlank() || !countryCode.toUpperCase().matches("[A-Z][A-Z]]"))
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new AbstractMap.SimpleEntry<>("error", "you should specify a valid code"))
+                    .build();
+        var country = world.getCountryByCode(countryCode);
+        if (country == null) return Response.status(Response.Status.NOT_FOUND)
+                .entity(new AbstractMap.SimpleEntry<>("error", "No country found by that code"))
+                .build();
+        return Response.ok(country).build();
+    }
+
+    @GET
+    @Path("/errorme/{vraag: [0-9]}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response stommeVraag(@PathParam("vraag") int vraag){
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/errorme/{vraag}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response stommeVraag2(@PathParam("vraag") String vraag){
+        return Response.noContent().build();
     }
 
     @GET
     @Path("/largestpopulations")
     @Produces("application/json")
-    public String get10LargestPopulations() {
-        List<Country> countries = world.get10LargestPopulations();
-        JsonArray countryArray = buildJsonCountryArray(countries);
-
-        return countryArray.toString();
+    public Response get10LargestPopulations() {
+        List<Country> allCountries = world.get10LargestPopulations();
+        return !allCountries.isEmpty() ? Response.ok(allCountries).build() : Response.status(Response.Status.NO_CONTENT).entity(new AbstractMap.SimpleEntry<>(MESSAGE, "There were no countries")).build();
     }
 
     @GET
     @Path("/largestsurfaces")
     @Produces("application/json")
-    public String getLargestSurfaces() {
-        List<Country> countries = world.get10LargestSurfaces();
-        JsonArray countryArray = buildJsonCountryArray(countries);
-
-        return countryArray.toString();
+    public Response getLargestSurfaces() {
+        List<Country> allCountries = world.get10LargestSurfaces();
+        return !allCountries.isEmpty() ? Response.ok(allCountries).build() : Response.status(Response.Status.NO_CONTENT).entity(new AbstractMap.SimpleEntry<>(MESSAGE, "There were no countries")).build();
     }
 
     @POST
     @Produces("application/json")
-    public String addCountry(String jsonBody) {
-        JsonObjectBuilder response = Json.createObjectBuilder();
-
+    public Response addCountry(String jsonBody) {
+        Response.ResponseBuilder response = null;
         StringReader strReader = new StringReader(jsonBody);
         JsonReader jsonReader = Json.createReader(strReader);
 
@@ -75,45 +95,17 @@ public class WorldResource {
 
                 World.getWorld().addCountry(code, iso3, nm, cap, ct, reg, sur, pop,
                         gov, lat, lng);
-                response.add(MESSAGE, "country added!");
+                response = Response.ok(new AbstractMap.SimpleEntry<>(MESSAGE, "country added"));
             } else {
-                response.add(MESSAGE, "expected a JsonObject!");
+                response = Response.status(Response.Status.BAD_REQUEST).entity(new AbstractMap.SimpleEntry<>(MESSAGE, "expected a JsonObject"));
             }
         } catch (Exception e) {
-            response.add(MESSAGE, "Error: " + e.getMessage());
-        }
-        finally {
+            response = Response.status(Response.Status.CONFLICT).entity(new AbstractMap.SimpleEntry<>(MESSAGE, "Error: "+ e.getMessage()));
+        } finally {
             jsonReader.close();
         }
 
-        return response.build().toString();
+        return response.build();
     }
 
-    private JsonArray buildJsonCountryArray(List<Country> countries) {
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-
-        for (Country c : countries) {
-            jsonArrayBuilder.add(buildJsonCountryObject(c));
-        }
-
-        return jsonArrayBuilder.build();
-    }
-
-    private JsonObject buildJsonCountryObject(Country c) {
-        JsonObjectBuilder job = Json.createObjectBuilder();
-
-        job.add("code", c.getCode());
-        job.add("iso3", c.getIso3());
-        job.add("name", c.getName());
-        job.add("continent", c.getContinent());
-        job.add("capital", c.getCapital());
-        job.add("region", c.getRegion());
-        job.add("surface", c.getSurface());
-        job.add("population", c.getPopulation());
-        job.add("government", c.getGovernment());
-        job.add("lat", c.getLatitude());
-        job.add("lng", c.getLongitude());
-
-        return job.build();
-    }
 }
