@@ -15,17 +15,23 @@ The page before you was added to the countrycase when we added security to our k
 <form id="loginForm">
     <h2>Login Form</h2>
     <div class="input-container">
-        <i class="fa fa-user icon"></i>
-        <input class="input-field" type="text" placeholder="Username" name="username">
+        <em class="fa fa-user icon"></em>
+        <label>
+            <input class="input-field" type="text" placeholder="Username" name="username">
+        </label>
     </div>
 
     <div class="input-container">
-        <i class="fa fa-key icon"></i>
-        <input class="input-field" type="password" placeholder="Password" name="password">
+        <em class="fa fa-key icon"></em>
+        <label>
+            <input class="input-field" type="password" placeholder="Password" name="password">
+        </label>
     </div>
 
     <button id="loginformsubmit" type="button" class="btn">Login</button>
 </form>
+
+<span id="showMeAllCountries">Ga naar alle landen toe na het inloggen</span>
 
 <script src="js/formlogin.js"></script>
 

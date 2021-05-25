@@ -12,3 +12,13 @@ function login() {
 }
 
 document.querySelector("#loginformsubmit").addEventListener("click", login);
+
+document.querySelector("#showMeAllCountries").addEventListener("click", function (){
+    var fetchOptions = { method: "GET",
+    headers : {
+        'Authorization' : 'Bearer ' + window.sessionStorage.getItem("myJWT")
+    }}
+    fetch("/restservices/countries", fetchOptions).then(function(response){
+        if (response.ok) return response.json();
+    }).then(myJson => console.log(myJson)).catch(error => console.log(error))
+})

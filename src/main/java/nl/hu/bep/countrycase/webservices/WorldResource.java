@@ -3,6 +3,7 @@ package nl.hu.bep.countrycase.webservices;
 import nl.hu.bep.countrycase.model.Country;
 import nl.hu.bep.countrycase.model.World;
 
+import javax.annotation.security.RolesAllowed;
 import javax.json.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ public class WorldResource {
     private World world = World.getWorld();
 
     @GET
+    @RolesAllowed("admin")
     @Produces("application/json")
     public Response getCountries() {
         List<Country> allCountries = world.getAllCountries();
