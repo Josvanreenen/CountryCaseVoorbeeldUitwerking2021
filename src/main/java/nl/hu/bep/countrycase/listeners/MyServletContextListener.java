@@ -20,7 +20,7 @@ public class MyServletContextListener implements ServletContextListener {
         try {
             //PersistenceManager.loadWorldFromAzure();
             out.println("World loaded from Azure...");
-            SecurityManager.registerUser(new MyUser("admin", "admin", "admin"));
+            SecurityManager.getInstance().registerUser(new MyUser("admin", "admin", "admin"));
         } catch (Exception e) {
             out.println("Error loading world: " + e.getMessage());
         }

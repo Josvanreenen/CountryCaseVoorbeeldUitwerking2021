@@ -22,7 +22,7 @@ public class AuthenticationResource {
     public Response authenticateUser(@FormParam("username") String username,
                                      @FormParam("password") String password) {
         try {
-            String role = SecurityManager.validateLogin(username, password);
+            String role = SecurityManager.getInstance().validateLogin(username, password);
             if (role == null) throw new IllegalArgumentException("No user found or invalid credentials");
             String token = createToken(username, role);
 
