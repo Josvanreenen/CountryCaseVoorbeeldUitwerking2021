@@ -1,9 +1,10 @@
 package nl.hu.bep.countrycase.security;
 
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.Objects;
 
-public class MyUser implements Principal {
+public class MyUser implements Principal, Serializable {
     private String username;
     private String password;
     private String role;
