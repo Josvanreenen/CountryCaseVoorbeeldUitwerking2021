@@ -29,7 +29,7 @@ public class WorldResource {
     @Path("/{code}")
     @Produces("application/json")
     public Response getCountry(@PathParam("code") String countryCode) {
-        if (countryCode.isBlank() || !countryCode.toUpperCase().matches("[A-Z][A-Z]]"))
+        if (countryCode.isBlank() || !countryCode.toUpperCase().matches("[A-Z][A-Z]"))
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new AbstractMap.SimpleEntry<>("error", "you should specify a valid code"))
                     .build();
